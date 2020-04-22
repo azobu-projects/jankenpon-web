@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
+import { AnimateKeyframes } from 'react-simple-animate'
 
-import { getRandomChoice, getChoiceImage, determineResult } from '../utils/game'
+import { getRandomChoice, determineResult } from '../utils/game'
 
 const GameContainer = styled.div`
-  max-width: 480px;
+  max-width: 720px;
   margin: 0 auto;
 `
 
@@ -82,7 +83,9 @@ const Button = styled.button`
   margin: 0 0.5rem;
 `
 
+// The Game component
 const Game = () => {
+  // State hooks
   const [playerOne, setPlayerOne] = useState({
     name: 'You',
     choice: 'rock',
@@ -97,13 +100,27 @@ const Game = () => {
     message: ``,
   })
 
-  const lockPlayerOne = () => {
+  // Reset the game if user click play again
+  const resetGame = () => {
     setPlayerOne({
       ...playerOne,
+      condition: '',
+    })
+    setPlayerTwo({
+      ...playerTwo,
+      choice: '',
+      condition: '',
+    })
+    setResult({
+      message: '',
     })
   }
 
-  const lockPlayerTwo = () => {
+  // Lock choice by players
+  const lockPlayers = () => {
+    setPlayerOne({
+      ...playerOne,
+    })
     setPlayerTwo({
       ...playerTwo, // Use rest parameter to get existing keys
       choice: getRandomChoice(),
@@ -118,8 +135,20 @@ const Game = () => {
         {/* Player Two or Computer */}
         <Player condition={playerTwo.condition}>
           <PlayerName>{playerTwo.name}:</PlayerName>
-          {playerTwo.choice && (
+          {playerTwo.choice ? (
             <PlayerChoice src={`/images/${playerTwo.choice}.png`} />
+          ) : (
+            <AnimateKeyframes
+              play
+              duration={2}
+              iterationCount='infinite'
+              keyframes={[
+                'transform: rotateZ(0deg)',
+                'transform: rotateZ(359deg)',
+              ]}
+            >
+              <PlayerChoice src={`/images/loading.png`} />
+            </AnimateKeyframes>
           )}
         </Player>
 
@@ -138,8 +167,7 @@ const Game = () => {
         <Panels>
           <Button
             onClick={() => {
-              lockPlayerOne()
-              lockPlayerTwo()
+              lockPlayers()
             }}
           >
             Set All Moves
@@ -147,11 +175,21 @@ const Game = () => {
 
           <Button
             onClick={() => {
-              const result = determineResult(playerOne, playerTwo)
-              setResult(result)
+              if (playerOne.choice && playerTwo.choice) {
+                const result = determineResult(playerOne, playerTwo)
+                setResult(result)
+              }
             }}
           >
             Game On!
+          </Button>
+
+          <Button
+            onClick={() => {
+              resetGame()
+            }}
+          >
+            Play Again
           </Button>
         </Panels>
       </GameContent>
