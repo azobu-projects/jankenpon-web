@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import { AnimateKeyframes } from 'react-simple-animate'
+import { Animate, AnimateKeyframes } from 'react-simple-animate'
 
 const Section = styled.section`
   font-family: 'Architects Daughter', cursive;
@@ -20,7 +20,7 @@ const PlayerContainer = styled(Section)`
   height: 100px;
   background: ${(props) =>
     props.condition === 'win'
-      ? '#7DE8A1' // gren
+      ? '#7DE8A1' // green
       : props.condition === 'lose'
       ? '#E87D7D' // red
       : props.condition === 'draw'
@@ -42,17 +42,33 @@ const Player = ({ player }) => {
   return (
     <PlayerContainer condition={player.condition}>
       <PlayerName>{player.name}:</PlayerName>
-      {player.choice ? (
-        <PlayerChoice src={`/images/${player.choice}.png`} />
-      ) : (
-        <AnimateKeyframes
+
+      {/* 1. Don't show anything at first
+      2. Show isLoading after chose a move
+      3. Show the image if chosen and not isLoading  */}
+
+      {!player.choice ? (
+        <span></span>
+      ) : player.choice && player.isLoading ? (
+        <Animate
           play
-          duration={2}
-          iterationCount='infinite'
-          keyframes={['transform: rotateZ(0deg)', 'transform: rotateZ(359deg)']}
+          start={{ opacity: 0, filter: 'blur(10px)' }}
+          end={{ opacity: 1, filter: 'blur(0)' }}
         >
-          <PlayerChoice src={`/images/loading.png`} />
-        </AnimateKeyframes>
+          <AnimateKeyframes
+            play
+            duration={2}
+            iterationCount='infinite'
+            keyframes={[
+              'transform: rotateZ(0deg)',
+              'transform: rotateZ(359deg)',
+            ]}
+          >
+            <PlayerChoice src={`/images/loading.png`} />
+          </AnimateKeyframes>
+        </Animate>
+      ) : (
+        <PlayerChoice src={`/images/${player.choice}.png`} />
       )}
     </PlayerContainer>
   )

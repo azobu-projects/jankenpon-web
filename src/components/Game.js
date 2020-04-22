@@ -89,11 +89,13 @@ const Game = () => {
   const [playerOne, setPlayerOne] = useState({
     name: 'You',
     choice: '',
+    isLoading: true,
     condition: '',
   })
   const [playerTwo, setPlayerTwo] = useState({
     name: 'Computer',
     choice: '',
+    isLoading: true,
     condition: '',
   })
 
@@ -103,11 +105,13 @@ const Game = () => {
       ...playerOne,
       choice: '',
       condition: '',
+      isLoading: false,
     })
     setPlayerTwo({
       ...playerTwo,
       choice: '',
       condition: '',
+      isLoading: false,
     })
     setGameSettings({
       message: '',
@@ -117,7 +121,11 @@ const Game = () => {
 
   // Handle user choice
   const handleChoice = (choice) => {
-    setPlayerOne({ ...playerOne, choice })
+    setPlayerOne({
+      ...playerOne,
+      choice: choice,
+      isLoading: true,
+    })
   }
 
   return (
@@ -162,6 +170,7 @@ const Game = () => {
                   // 1. Set choice for player two
                   setPlayerTwo({
                     ...playerTwo, // Use rest parameter to get existing keys
+                    isLoading: true,
                     choice: getRandomChoice(),
                   })
                 }}
@@ -170,16 +179,26 @@ const Game = () => {
               </GameButton>
             )}
 
-            {!gameSettings.isOver && playerOne.choice && playerTwo.choice && (
+            {!gameSettings.isOver && playerOne.choice && (
               <GameButton
                 color='green'
-                onClick={() => {
+                onClick={async () => {
                   // 2. Determine the result
                   if (playerOne.choice && playerTwo.choice) {
                     const result = determineResult(playerOne, playerTwo)
                     setGameSettings({
                       ...result,
                       isOver: true,
+                    })
+                    setPlayerOne({
+                      ...playerOne,
+                      isLoading: false,
+                      condition: result.subject.condition,
+                    })
+                    setPlayerTwo({
+                      ...playerTwo,
+                      isLoading: false,
+                      condition: result.opponent.condition,
                     })
                   }
                 }}
