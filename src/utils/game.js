@@ -43,7 +43,7 @@ export const determineResult = (subject, opponent) => {
     return {
       subject,
       opponent,
-      message: `${opponent.name} Win!`,
+      message: `${subject.name} Lose!`,
     }
   } else {
     // Subject choice is draw against the opponent choice
@@ -52,7 +52,7 @@ export const determineResult = (subject, opponent) => {
     return {
       subject,
       opponent,
-      message: `Game Draw!`,
+      message: `It's a Draw!`,
     }
   }
 }
