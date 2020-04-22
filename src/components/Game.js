@@ -41,12 +41,12 @@ const Result = styled(Section)`
 
 const Button = styled.button`
   cursor: pointer;
+  font-size: 1.5em;
   background: #000;
   color: #fff;
   font-weight: 900;
   padding: 1rem;
   border: none;
-  font-size: 1em;
   border-radius: 5px;
   text-transform: uppercase;
   margin: 0 0.5rem;
@@ -188,7 +188,7 @@ const Game = () => {
                   }
                 }}
               >
-                Battle!
+                Start Battle
               </GameButton>
             )}
 
