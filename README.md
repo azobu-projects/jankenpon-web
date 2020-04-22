@@ -18,6 +18,26 @@ Players battle in which each simultaneously forms one of three shapes (🗿/📄
 - Netlify
 - Uniregistry
 
+## Usage
+
+### Development
+
+```sh
+yarn dev
+```
+
+### Build
+
+```sh
+yarn build
+```
+
+### Test
+
+```sh
+yarn test
+```
+
 ## License
 
 [GNU Affero General Public License v3 (AGPL-3.0)](./LICENSE)
