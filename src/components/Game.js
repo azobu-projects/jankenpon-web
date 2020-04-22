@@ -63,10 +63,6 @@ const Result = styled(Section)`
   font-family: 'Press Start 2P', cursive;
 `
 
-const Panels = styled(Section)`
-  flex-direction: row;
-`
-
 const Button = styled.button`
   cursor: pointer;
   font-weight: 900;
@@ -77,27 +73,41 @@ const Button = styled.button`
   font-size: 1em;
   border-radius: 5px;
   text-transform: uppercase;
+  margin: 0 0.5rem;
   &:hover {
     opacity: 0.8;
   }
-  margin: 0 0.5rem;
 `
+
+const Panels = styled(Section)`
+  flex-direction: column;
+`
+
+const PanelRow = styled.div`
+  margin: 0.5rem 0;
+`
+
+const ChoiceButtons = styled(PanelRow)``
+const ChoiceButton = styled(Button)``
+
+const GameButtons = styled(PanelRow)``
+const GameButton = styled(Button)``
 
 // The Game component
 const Game = () => {
   // State hooks
+  const [gameSettings, setGameSettings] = useState({
+    message: ``,
+  })
   const [playerOne, setPlayerOne] = useState({
     name: 'You',
-    choice: 'rock',
+    choice: '',
     condition: '',
   })
   const [playerTwo, setPlayerTwo] = useState({
     name: 'Computer',
     choice: '',
     condition: '',
-  })
-  const [result, setResult] = useState({
-    message: ``,
   })
 
   // Reset the game if user click play again
@@ -111,7 +121,7 @@ const Game = () => {
       choice: '',
       condition: '',
     })
-    setResult({
+    setGameSettings({
       message: '',
     })
   }
@@ -152,45 +162,81 @@ const Game = () => {
           )}
         </Player>
 
-        {/* Game Result Message */}
+        {/* Game Settings Message */}
         <Result>
-          <span>{result.message}</span>
+          <span>
+            {gameSettings.message ? gameSettings.message : `Let's begin!`}
+          </span>
         </Result>
 
         {/* Player One */}
         <Player condition={playerOne.condition}>
           <PlayerName>{playerOne.name}:</PlayerName>
-          <PlayerChoice src={`/images/${playerOne.choice}.png`} />
+          {playerOne.choice ? (
+            <PlayerChoice src={`/images/${playerOne.choice}.png`} />
+          ) : (
+            <AnimateKeyframes
+              play
+              duration={2}
+              iterationCount='infinite'
+              keyframes={[
+                'transform: rotateZ(0deg)',
+                'transform: rotateZ(359deg)',
+              ]}
+            >
+              <PlayerChoice src={`/images/loading.png`} />
+            </AnimateKeyframes>
+          )}
         </Player>
 
         {/* Game Panels */}
         <Panels>
-          <Button
-            onClick={() => {
-              lockPlayers()
-            }}
-          >
-            Set All Moves
-          </Button>
+          <ChoiceButtons>
+            <ChoiceButton
+              onClick={() => setPlayerOne({ ...playerOne, choice: 'rock' })}
+            >
+              Rock
+            </ChoiceButton>
+            <ChoiceButton
+              onClick={() => setPlayerOne({ ...playerOne, choice: 'paper' })}
+            >
+              Paper
+            </ChoiceButton>
+            <ChoiceButton
+              onClick={() => setPlayerOne({ ...playerOne, choice: 'scissors' })}
+            >
+              Scissors
+            </ChoiceButton>
+          </ChoiceButtons>
 
-          <Button
-            onClick={() => {
-              if (playerOne.choice && playerTwo.choice) {
-                const result = determineResult(playerOne, playerTwo)
-                setResult(result)
-              }
-            }}
-          >
-            Game On!
-          </Button>
+          <GameButtons>
+            <GameButton
+              onClick={() => {
+                lockPlayers()
+              }}
+            >
+              Set All Moves
+            </GameButton>
 
-          <Button
-            onClick={() => {
-              resetGame()
-            }}
-          >
-            Play Again
-          </Button>
+            <GameButton
+              onClick={() => {
+                if (playerOne.choice && playerTwo.choice) {
+                  const result = determineResult(playerOne, playerTwo)
+                  setGameSettings(result)
+                }
+              }}
+            >
+              Game On!
+            </GameButton>
+
+            <GameButton
+              onClick={() => {
+                resetGame()
+              }}
+            >
+              Play Again
+            </GameButton>
+          </GameButtons>
         </Panels>
       </GameContent>
     </GameContainer>
