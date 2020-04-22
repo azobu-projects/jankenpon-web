@@ -41,17 +41,17 @@ const Result = styled(Section)`
 
 const Button = styled.button`
   cursor: pointer;
-  font-weight: 900;
-  padding: 1rem;
   background: #000;
   color: #fff;
+  font-weight: 900;
+  padding: 1rem;
   border: none;
   font-size: 1em;
   border-radius: 5px;
   text-transform: uppercase;
   margin: 0 0.5rem;
   &:hover {
-    opacity: 0.8;
+    opacity: 0.9;
   }
 `
 
@@ -67,13 +67,24 @@ const ChoiceButtons = styled(PanelRow)``
 const ChoiceButton = styled(Button)``
 
 const GameButtons = styled(PanelRow)``
-const GameButton = styled(Button)``
+const GameButton = styled(Button)`
+  color: black;
+  background-color: ${(props) =>
+    props.color === 'yellow'
+      ? '#ffdd33' // yellow
+      : props.color === 'green'
+      ? '#6cc24a'
+      : props.color === 'blue'
+      ? '#00d8ff'
+      : '#aaaaaa'};
+`
 
 // The Game component
 const Game = () => {
   // State hooks
   const [gameSettings, setGameSettings] = useState({
     message: ``,
+    isOver: false,
   })
   const [playerOne, setPlayerOne] = useState({
     name: 'You',
@@ -90,6 +101,7 @@ const Game = () => {
   const resetGame = () => {
     setPlayerOne({
       ...playerOne,
+      choice: '',
       condition: '',
     })
     setPlayerTwo({
@@ -99,23 +111,18 @@ const Game = () => {
     })
     setGameSettings({
       message: '',
+      isOver: false,
     })
   }
 
-  // Lock choice by players
-  const lockPlayers = () => {
-    setPlayerOne({
-      ...playerOne,
-    })
-    setPlayerTwo({
-      ...playerTwo, // Use rest parameter to get existing keys
-      choice: getRandomChoice(),
-    })
+  // Handle user choice
+  const handleChoice = (choice) => {
+    setPlayerOne({ ...playerOne, choice })
   }
 
   return (
     <GameContainer>
-      <Heading>Jankenpon Simple</Heading>
+      <Heading>Jankenpon Fancy</Heading>
 
       <GameContent>
         {/* Player Two or Computer */}
@@ -133,51 +140,64 @@ const Game = () => {
 
         {/* Game Panels */}
         <Panels>
-          <ChoiceButtons>
-            <ChoiceButton
-              onClick={() => setPlayerOne({ ...playerOne, choice: 'rock' })}
-            >
-              Rock
-            </ChoiceButton>
-            <ChoiceButton
-              onClick={() => setPlayerOne({ ...playerOne, choice: 'paper' })}
-            >
-              Paper
-            </ChoiceButton>
-            <ChoiceButton
-              onClick={() => setPlayerOne({ ...playerOne, choice: 'scissors' })}
-            >
-              Scissors
-            </ChoiceButton>
-          </ChoiceButtons>
+          {!gameSettings.isOver && (
+            <ChoiceButtons>
+              <ChoiceButton onClick={() => handleChoice('rock')}>
+                Rock
+              </ChoiceButton>
+              <ChoiceButton onClick={() => handleChoice('paper')}>
+                Paper
+              </ChoiceButton>
+              <ChoiceButton onClick={() => handleChoice('scissors')}>
+                Scissors
+              </ChoiceButton>
+            </ChoiceButtons>
+          )}
 
           <GameButtons>
-            <GameButton
-              onClick={() => {
-                lockPlayers()
-              }}
-            >
-              Set All Moves
-            </GameButton>
+            {!gameSettings.isOver && playerOne.choice && (
+              <GameButton
+                color='yellow'
+                onClick={() => {
+                  // 1. Set choice for player two
+                  setPlayerTwo({
+                    ...playerTwo, // Use rest parameter to get existing keys
+                    choice: getRandomChoice(),
+                  })
+                }}
+              >
+                Set Move
+              </GameButton>
+            )}
 
-            <GameButton
-              onClick={() => {
-                if (playerOne.choice && playerTwo.choice) {
-                  const result = determineResult(playerOne, playerTwo)
-                  setGameSettings(result)
-                }
-              }}
-            >
-              Game On!
-            </GameButton>
+            {!gameSettings.isOver && playerOne.choice && playerTwo.choice && (
+              <GameButton
+                color='green'
+                onClick={() => {
+                  // 2. Determine the result
+                  if (playerOne.choice && playerTwo.choice) {
+                    const result = determineResult(playerOne, playerTwo)
+                    setGameSettings({
+                      ...result,
+                      isOver: true,
+                    })
+                  }
+                }}
+              >
+                Game On!
+              </GameButton>
+            )}
 
-            <GameButton
-              onClick={() => {
-                resetGame()
-              }}
-            >
-              Play Again
-            </GameButton>
+            {gameSettings.isOver && (
+              <GameButton
+                color='blue'
+                onClick={() => {
+                  resetGame()
+                }}
+              >
+                Play Again
+              </GameButton>
+            )}
           </GameButtons>
         </Panels>
       </GameContent>
