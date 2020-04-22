@@ -1,0 +1,20 @@
+[
+  {
+    "image": "🗿",
+    "choice": "rock",
+    "win": "scissors",
+    "lose": "paper"
+  },
+  {
+    "image": "📄",
+    "choice": "paper",
+    "win": "rock",
+    "lose": "scissors"
+  },
+  {
+    "image": "✂️",
+    "choice": "scissors",
+    "win": "paper",
+    "lose": "rock"
+  }
+]
