@@ -81,15 +81,15 @@ const GameButton = styled(Button)`
 
 // The Game component
 const Game = () => {
-  // State hooks
-  const [gameSettings, setGameSettings] = useState({
-    message: ``,
+  // State defaults and hooks
+  const defaultGameSettings = {
+    message: `Choose your move!`,
     isOver: false,
-  })
+  }
+  const [gameSettings, setGameSettings] = useState(defaultGameSettings)
   const [playerOne, setPlayerOne] = useState({
     name: 'You',
     choice: '',
-    isLoading: true,
     condition: '',
   })
   const [playerTwo, setPlayerTwo] = useState({
@@ -105,7 +105,6 @@ const Game = () => {
       ...playerOne,
       choice: '',
       condition: '',
-      isLoading: false,
     })
     setPlayerTwo({
       ...playerTwo,
@@ -124,7 +123,10 @@ const Game = () => {
     setPlayerOne({
       ...playerOne,
       choice: choice,
-      isLoading: true,
+    })
+    setGameSettings({
+      ...gameSettings,
+      message: `Wait for it...`,
     })
   }
 
@@ -138,9 +140,7 @@ const Game = () => {
 
         {/* Game Settings Message */}
         <Result>
-          <span>
-            {gameSettings.message ? gameSettings.message : `Let's begin!`}
-          </span>
+          <span>{gameSettings.message}</span>
         </Result>
 
         {/* Player One or User */}
@@ -148,7 +148,7 @@ const Game = () => {
 
         {/* Game Panels */}
         <Panels>
-          {!gameSettings.isOver && (
+          {!gameSettings.isOver && !playerOne.choice && !playerTwo.choice && (
             <ChoiceButtons>
               <ChoiceButton onClick={() => handleChoice('rock')}>
                 Rock
@@ -163,7 +163,7 @@ const Game = () => {
           )}
 
           <GameButtons>
-            {!gameSettings.isOver && playerOne.choice && (
+            {!gameSettings.isOver && playerOne.choice && !playerTwo.choice && (
               <GameButton
                 color='yellow'
                 onClick={() => {
@@ -173,13 +173,17 @@ const Game = () => {
                     isLoading: true,
                     choice: getRandomChoice(),
                   })
+                  setGameSettings({
+                    ...gameSettings,
+                    message: `Game On!`,
+                  })
                 }}
               >
-                Set Move
+                Wait for opponent
               </GameButton>
             )}
 
-            {!gameSettings.isOver && playerOne.choice && (
+            {!gameSettings.isOver && playerOne.choice && playerTwo.choice && (
               <GameButton
                 color='green'
                 onClick={async () => {
@@ -192,7 +196,6 @@ const Game = () => {
                     })
                     setPlayerOne({
                       ...playerOne,
-                      isLoading: false,
                       condition: result.subject.condition,
                     })
                     setPlayerTwo({
