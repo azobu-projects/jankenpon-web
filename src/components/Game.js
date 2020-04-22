@@ -112,10 +112,7 @@ const Game = () => {
       condition: '',
       isLoading: false,
     })
-    setGameSettings({
-      message: '',
-      isOver: false,
-    })
+    setGameSettings(defaultGameSettings)
   }
 
   // Handle user choice
@@ -124,9 +121,14 @@ const Game = () => {
       ...playerOne,
       choice: choice,
     })
+    setPlayerTwo({
+      ...playerTwo, // Use rest parameter to get existing keys
+      isLoading: true,
+      choice: getRandomChoice(),
+    })
     setGameSettings({
       ...gameSettings,
-      message: `Wait for it...`,
+      message: `Battle!`,
     })
   }
 
@@ -163,26 +165,6 @@ const Game = () => {
           )}
 
           <GameButtons>
-            {!gameSettings.isOver && playerOne.choice && !playerTwo.choice && (
-              <GameButton
-                color='yellow'
-                onClick={() => {
-                  // 1. Set choice for player two
-                  setPlayerTwo({
-                    ...playerTwo, // Use rest parameter to get existing keys
-                    isLoading: true,
-                    choice: getRandomChoice(),
-                  })
-                  setGameSettings({
-                    ...gameSettings,
-                    message: `Game On!`,
-                  })
-                }}
-              >
-                Wait for opponent
-              </GameButton>
-            )}
-
             {!gameSettings.isOver && playerOne.choice && playerTwo.choice && (
               <GameButton
                 color='green'
@@ -206,7 +188,7 @@ const Game = () => {
                   }
                 }}
               >
-                Game On!
+                Battle!
               </GameButton>
             )}
 

@@ -68,7 +68,13 @@ const Player = ({ player }) => {
           </AnimateKeyframes>
         </Animate>
       ) : (
-        <PlayerChoice src={`/images/${player.choice}.png`} />
+        <Animate
+          play
+          start={{ opacity: 0, filter: 'blur(10px)' }}
+          end={{ opacity: 1, filter: 'blur(0)' }}
+        >
+          <PlayerChoice src={`/images/${player.choice}.png`} />
+        </Animate>
       )}
     </PlayerContainer>
   )
