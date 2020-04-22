@@ -1,10 +1,14 @@
 import React from 'react'
 
+import Layout from './components/Layout'
+
+import HomePage from './pages/home'
+
 const App = () => {
   return (
-    <div>
-      <h1>Jankenpon</h1>
-    </div>
+    <Layout>
+      <HomePage></HomePage>
+    </Layout>
   )
 }
 
