@@ -3,6 +3,15 @@ import styled from '@emotion/styled'
 
 import { getRandomChoice, getChoiceImage, determineResult } from '../utils/game'
 
+const GameContainer = styled.div`
+  max-width: 480px;
+  margin: 0 auto;
+`
+
+const Heading = styled.h1`
+  text-align: center;
+`
+
 const Section = styled.section`
   padding: 1rem;
   margin: 1rem;
@@ -81,8 +90,8 @@ const Game = () => {
   }
 
   return (
-    <div>
-      <h1>Jankenpon</h1>
+    <GameContainer>
+      <Heading>Jankenpon Simple</Heading>
 
       {/* Player Two or Computer */}
       <Player>
@@ -115,7 +124,7 @@ const Game = () => {
             lockPlayerTwo()
           }}
         >
-          Set All Moves!
+          Set All Moves
         </Button>
 
         <Button
@@ -127,7 +136,7 @@ const Game = () => {
           Game On!
         </Button>
       </Panels>
-    </div>
+    </GameContainer>
   )
 }
 
