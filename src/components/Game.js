@@ -10,12 +10,12 @@ const GameContainer = styled.div`
 
 const Heading = styled.h1`
   text-align: center;
+  font-family: 'Architects Daughter', cursive;
 `
 
 const Section = styled.section`
   padding: 1rem;
   margin: 1rem;
-  border: 2px solid #000;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
@@ -24,14 +24,26 @@ const Section = styled.section`
 `
 
 const Player = styled(Section)`
+  border: 2px solid #000;
   font-size: 1.5em;
   min-height: 100px;
+  background: ${(props) =>
+    props.condition === 'win'
+      ? '#7DE8A1' // gren
+      : props.condition === 'lose'
+      ? '#E87D7D' // red
+      : props.condition === 'draw'
+      ? '#C7C7D1' // gray
+      : '#FFFFFF'};
 `
 
 const Result = styled(Section)`
   font-size: 1.5em;
   text-transform: uppercase;
+  font-weight: 900;
   min-height: 30px;
+  letter-spacing: 0.1em;
+  font-family: 'Press Start 2P', cursive;
 `
 
 const Panels = styled(Section)`
@@ -67,10 +79,12 @@ const Game = () => {
   const [playerOne, setPlayerOne] = useState({
     name: 'You',
     choice: 'rock',
+    condition: '',
   })
   const [playerTwo, setPlayerTwo] = useState({
     name: 'Computer',
     choice: '',
+    condition: '',
   })
   const [result, setResult] = useState({
     message: ``,
@@ -94,7 +108,7 @@ const Game = () => {
       <Heading>Jankenpon Simple</Heading>
 
       {/* Player Two or Computer */}
-      <Player>
+      <Player condition={playerTwo.condition}>
         <PlayerName>{playerTwo.name}:</PlayerName>
         <PlayerChoice>
           {getChoiceImage(playerTwo.choice)}
@@ -108,7 +122,7 @@ const Game = () => {
       </Result>
 
       {/* Player One */}
-      <Player>
+      <Player condition={playerOne.condition}>
         <PlayerName>{playerOne.name}:</PlayerName>
         <PlayerChoice>
           {getChoiceImage(playerOne.choice)}

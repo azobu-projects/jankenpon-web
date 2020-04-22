@@ -15,9 +15,11 @@ const NavContainer = styled.nav`
 `
 
 const NavLogo = styled.h1`
+  cursor: pointer;
   color: #fd3;
   font-weight: 900;
   margin: 0;
+  font-family: 'Architects Daughter', cursive;
 `
 
 const NavItems = styled.p`
