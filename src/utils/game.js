@@ -29,19 +29,29 @@ export const determineResult = (subject, opponent) => {
   // Determine which one is the winner
   if (subjectRule.win === opponent.choice) {
     // Subject choice is win against the opponent choice
-    subject.win = true
+    subject.condition = 'win'
+    opponent.condition = 'lose'
     return {
+      subject,
+      opponent,
       message: `${subject.name} Win!`,
     }
   } else if (subjectRule.lose === opponent.choice) {
     // Subject choice is lose against the opponent choice
-    opponent.win = true
+    subject.condition = 'lose'
+    opponent.condition = 'win'
     return {
+      subject,
+      opponent,
       message: `${opponent.name} Win!`,
     }
   } else {
     // Subject choice is draw against the opponent choice
+    subject.condition = 'draw'
+    opponent.condition = 'draw'
     return {
+      subject,
+      opponent,
       message: `Game Draw!`,
     }
   }
