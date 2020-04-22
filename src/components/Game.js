@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import { AnimateKeyframes } from 'react-simple-animate'
+
+import Player from './Player'
 
 import { getRandomChoice, determineResult } from '../utils/game'
 
@@ -27,31 +28,6 @@ const Section = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`
-
-const Player = styled(Section)`
-  flex-direction: row;
-  border: 2px solid #000;
-  font-size: 1.5em;
-  height: 100px;
-  background: ${(props) =>
-    props.condition === 'win'
-      ? '#7DE8A1' // gren
-      : props.condition === 'lose'
-      ? '#E87D7D' // red
-      : props.condition === 'draw'
-      ? '#C7C7D1' // gray
-      : '#FFFFFF'};
-`
-
-const PlayerName = styled.h3`
-  font-weight: bold;
-  margin: 0;
-`
-
-const PlayerChoice = styled.img`
-  height: 60px;
-  margin: 1rem;
 `
 
 const Result = styled(Section)`
@@ -143,24 +119,7 @@ const Game = () => {
 
       <GameContent>
         {/* Player Two or Computer */}
-        <Player condition={playerTwo.condition}>
-          <PlayerName>{playerTwo.name}:</PlayerName>
-          {playerTwo.choice ? (
-            <PlayerChoice src={`/images/${playerTwo.choice}.png`} />
-          ) : (
-            <AnimateKeyframes
-              play
-              duration={2}
-              iterationCount='infinite'
-              keyframes={[
-                'transform: rotateZ(0deg)',
-                'transform: rotateZ(359deg)',
-              ]}
-            >
-              <PlayerChoice src={`/images/loading.png`} />
-            </AnimateKeyframes>
-          )}
-        </Player>
+        <Player player={playerTwo} />
 
         {/* Game Settings Message */}
         <Result>
@@ -169,25 +128,8 @@ const Game = () => {
           </span>
         </Result>
 
-        {/* Player One */}
-        <Player condition={playerOne.condition}>
-          <PlayerName>{playerOne.name}:</PlayerName>
-          {playerOne.choice ? (
-            <PlayerChoice src={`/images/${playerOne.choice}.png`} />
-          ) : (
-            <AnimateKeyframes
-              play
-              duration={2}
-              iterationCount='infinite'
-              keyframes={[
-                'transform: rotateZ(0deg)',
-                'transform: rotateZ(359deg)',
-              ]}
-            >
-              <PlayerChoice src={`/images/loading.png`} />
-            </AnimateKeyframes>
-          )}
-        </Player>
+        {/* Player One or User */}
+        <Player player={playerOne} />
 
         {/* Game Panels */}
         <Panels>
